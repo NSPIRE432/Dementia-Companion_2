@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#5b6ee1">
+
+  <title>Dementia Companion</title>
+
+  <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+</head>
+
+<body>
+
+    <div style="text-align: right; padding: 10px; margin-bottom: 20px;">
+    <p>Logged in as: <strong>{{ session['email'] }}</strong></p>
+    <a href="{{ url_for('logout') }}" style="color: red; text-decoration: none; font-weight: bold;">Logout</a>
+</div>
+
+  <!-- ================= ONBOARDING ================= -->
+  <section id="onboarding" class="onboarding">
+
+    <div class="onboarding-card">
+
+      <div class="brand">
+        <div class="brand-icon">🧠</div>
+        <div>
+          <h1>Dementia Companion</h1>
+          <p>A calm digital companion for everyday life</p>
+        </div>
+      </div>
+
+      <div class="progress">
+        <span class="progress-dot active"></span>
+        <span class="progress-dot"></span>
+        <span class="progress-dot"></span>
+        <span class="progress-dot"></span>
+        <span class="progress-dot"></span>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="onboarding-step active" id="step1">
+
+        <div class="welcome-icon">🌿</div>
+
+        <h2>Welcome</h2>
+
+        <p>
+          Dementia Companion helps you organize your day,
+          remember important things, enjoy simple activities
+          and stay connected with people you know.
+        </p>
+
+        <button type="button" class="primary-btn full" onclick="nextStep(2)">
+          Get Started →
+        </button>
+
+      </div>
+
+
+      <!-- STEP 2 -->
+      <div class="onboarding-step" id="step2">
+
+        <div class="step-icon">👋</div>
+
+        <h2>What should we call you?</h2>
+
+        <p>Your name helps us personalize your experience.</p>
+
+        <label for="userName">Your name</label>
+
+        <input
+          id="userName"
+          type="text"
+          placeholder="Enter your name"
+          autocomplete="name"
+        >
+
+        <div class="button-row">
+          <button class="secondary-btn" onclick="nextStep(1)">
+            Back
+          </button>
+
+          <button class="primary-btn" onclick="validateName()">
+            Continue
+          </button>
+        </div>
+
+      </div>
+
+
+      <!-- STEP 3 -->
+      <div class="onboarding-step" id="step3">
+
+        <div class="step-icon">📍</div>
+
+        <h2>Where are you?</h2>
+
+        <p>
+          Location sharing is optional and is OFF by default.
+        </p>
+
+        <label>City</label>
+        <input id="userCity" type="text" placeholder="Example: Pune">
+
+        <label>State / Region</label>
+        <input id="userState" type="text" placeholder="Example: Maharashtra">
+
+        <label>Country</label>
+        <input id="userCountry" type="text" placeholder="Example: India">
+
+        <label class="switch-row">
+          <span>
+            <strong>Allow location sharing</strong>
+            <small>Only enable this if you want caregiver access.</small>
+          </span>
+
+          <input id="locationConsent" type="checkbox">
+          <span class="switch"></span>
+        </label>
+
+        <div class="button-row">
+          <button class="secondary-btn" onclick="nextStep(2)">
+            Back
+          </button>
+
+          <button class="primary-btn" onclick="nextStep(4)">
+            Continue
+          </button>
+        </div>
+
+      </div>
+
+
+      <!-- STEP 4 -->
+      <div class="onboarding-step" id="step4">
+
+        <div class="step-icon">♿</div>
+
+        <h2>Make it comfortable</h2>
+
+        <p>Choose accessibility settings that work for you.</p>
+
+        <label>Text size</label>
+
+        <select id="onboardTextSize">
+          <option value="normal">Normal</option>
+          <option value="large">Large</option>
+          <option value="xlarge">Extra Large</option>
+        </select>
+
+        <label class="switch-row">
+          <span>
+            <strong>High contrast</strong>
+            <small>Increase visual contrast.</small>
+          </span>
+          <input id="onboardContrast" type="checkbox">
+          <span class="switch"></span>
+        </label>
+
+        <label class="switch-row">
+          <span>
+            <strong>Reduce animation</strong>
+            <small>Use fewer moving effects.</small>
+          </span>
+          <input id="onboardMotion" type="checkbox">
+          <span class="switch"></span>
+        </label>
+
+        <label>Language</label>
+
+        <select id="onboardLanguage">
+          <option value="en">English</option>
+          <option value="hi">हिन्दी</option>
+          <option value="mr">मराठी</option>
+        </select>
+
+        <div class="button-row">
+          <button class="secondary-btn" onclick="nextStep(3)">
+            Back
+          </button>
+
+          <button class="primary-btn" onclick="nextStep(5)">
+            Continue
+          </button>
+        </div>
+
+      </div>
+
+
+      <!-- STEP 5 -->
+      <div class="onboarding-step" id="step5">
+
+        <div class="step-icon">🔐</div>
+
+        <h2>Your choices matter</h2>
+
+        <p>
+          Nothing sensitive is enabled automatically.
+          Choose what you want to allow.
+        </p>
+
+        <label class="consent-box">
+          <input id="consentPersonal" type="checkbox">
+          <span>
+            <strong>Personal information</strong>
+            <small>Allow your name and basic profile to be saved.</small>
+          </span>
+        </label>
+
+        <label class="consent-box">
+          <input id="consentPhotos" type="checkbox">
+          <span>
+            <strong>Photos & memories </strong>
+            <small>Allow photos to be stored in this browser.</small>
+          </span>
+        </label>
+
+        <label class="consent-box">
+          <input id="consentVoice" type="checkbox">
+          <span>
+            <strong>Voice</strong>
+            <small>Allow the browser's speech recognition feature.</small>
+          </span>
+        </label>
+
+        <label class="consent-box">
+          <input id="consentLocation" type="checkbox">
+          <span>
+            <strong>Location</strong>
+            <small>Allow simulated location information to be visible to authorized caregivers.</small>
+          </span>
+        </label>
+
+        <div class="button-row">
+          <button class="secondary-btn" onclick="nextStep(4)">
+            Back
+          </button>
+
+          <button class="primary-btn" onclick="finishOnboarding()">
+            Finish Setup ✓
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ================= MAIN APPLICATION ================= -->
+
+  <section id="app" class="app hidden">
+
+    <aside class="sidebar" id="sidebar">
+
+      <div class="sidebar-brand">
+        <div class="brand-icon">🧠</div>
+        <strong>Dementia Companion</strong>
+      </div>
+
+      <nav id="navigation">
+
+        <button data-page="home" class="nav-item active">
+          <span>🏠</span> Home
+        </button>
+
+        <button data-page="schedule" class="nav-item">
+          <span>📅</span> My Schedule
+        </button>
+
+        <button data-page="reminders" class="nav-item">
+          <span>⏰</span> Reminders
+        </button>
+
+        <button data-page="people" class="nav-item">
+          <span>👥</span> People
+        </button>
+
+        <button data-page="memories" class="nav-item">
+          <span>🖼️</span> My Memories
+        </button>
+
+        <button data-page="games" class="nav-item">
+          <span>🎮</span> Games
+        </button>
+
+        <button data-page="voice" class="nav-item">
+          <span>🎤</span> Voice Assistant
+        </button>
+
+        <button data-page="help" class="nav-item">
+          <span>🆘</span> Help
+        </button>
+
+        <button data-page="caregiver" class="nav-item">
+          <span>🧑‍🍼</span> Caregiver
+        </button>
+
+        <button data-page="privacy" class="nav-item">
+          <span>🔐</span> Privacy
+        </button>
+
+        <button data-page="location" class="nav-item">
+          <span>📍</span> Safety Location
+        </button>
+
+        <button data-page="audit" class="nav-item">
+          <span>📋</span> Activity Log
+        </button>
+
+        <button data-page="settings" class="nav-item">
+          <span>⚙️</span> Settings
+        </button>
+
+        <button data-page="how" class="nav-item">
+          <span>ℹ️</span> How It Works
+        </button>
+
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="logout-btn" onclick="resetData()">
+          ↻ Reset App
+        </button>
+      </div>
+
+    </aside>
+
+
+    <main class="main">
+
+      <header class="topbar">
+
+        <button
+          class="menu-btn"
+          aria-label="Open menu"
+          onclick="toggleSidebar()">
+          ☰
+        </button>
+
+        <div>
+          <div class="top-title" id="pageTitle">Home</div>
+          <div class="top-date" id="topDate"></div>
+        </div>
+
+        <div class="top-actions">
+
+          <button
+            class="icon-btn"
+            title="Read page aloud"
+            onclick="readCurrentPage()">
+            🔊
+          </button>
+
+          <button
+            class="icon-btn"
+            title="Change appearance"
+            onclick="toggleTheme()">
+            🌓
+          </button>
+
+        </div>
+
+      </header>
+
+
+      <div id="pageContent" class="page-content"></div>
+
+    </main>
+
+  </section>
+
+
+  <!-- MODAL -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-backdrop" onclick="closeModal()"></div>
+
+    <div class="modal-box">
+
+      <button class="modal-close" onclick="closeModal()">×</button>
+
+      <div id="modalContent"></div>
+
+    </div>
+  </div>
+
+
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
+
+  <div
+    id="liveRegion"
+    class="sr-only"
+    aria-live="polite">
+  </div>
+
+  <script>
+    // Give JavaScript the logged-in user's email
+    window.USER_EMAIL = "{{ session['email'] }}";
+</script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
